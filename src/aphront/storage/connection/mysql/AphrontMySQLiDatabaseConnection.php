@@ -53,7 +53,8 @@ final class AphrontMySQLiDatabaseConnection
         $host = '127.0.0.1';
       }
     }
-
+    //fix error at HHVM
+    $port = intval($port);
     $conn = @new mysqli(
       $host,
       $user,
