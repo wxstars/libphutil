@@ -65,10 +65,12 @@ final class AphrontMySQLiDatabaseConnection
           $error),
         $errno);
     }
+
     $ok = @$conn->set_charset('utf8mb4');
     if (!$ok) {
       $ok = $conn->set_charset('utf8');
     }
+
     return $conn;
   }
   protected function rawQuery($raw_query) {
