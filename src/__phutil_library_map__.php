@@ -343,6 +343,8 @@ phutil_register_library_map(array(
     'PhutilURI' => 'parser/PhutilURI.php',
     'PhutilURITestCase' => 'parser/__tests__/PhutilURITestCase.php',
     'PhutilUSEnglishLocale' => 'internationalization/locales/PhutilUSEnglishLocale.php',
+    'PhutilCNChineseLocale' => 'internationalization/locales/PhutilCNChineseLocale.php',
+    
     'PhutilUTF8StringTruncator' => 'utils/PhutilUTF8StringTruncator.php',
     'PhutilUTF8TestCase' => 'utils/__tests__/PhutilUTF8TestCase.php',
     'PhutilUnknownSymbolParserGeneratorException' => 'parser/generator/exception/PhutilUnknownSymbolParserGeneratorException.php',
@@ -842,6 +844,7 @@ phutil_register_library_map(array(
     'PhutilTypeSpecTestCase' => 'PhutilTestCase',
     'PhutilURI' => 'Phobject',
     'PhutilURITestCase' => 'PhutilTestCase',
+     'PhutilCNChineseLocale'=> 'PhutilLocale',
     'PhutilUSEnglishLocale' => 'PhutilLocale',
     'PhutilUTF8StringTruncator' => 'Phobject',
     'PhutilUTF8TestCase' => 'PhutilTestCase',
