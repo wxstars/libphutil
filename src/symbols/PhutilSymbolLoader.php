@@ -26,13 +26,11 @@
  * The **library** and **where** keys show where the symbol is defined. The
  * **type** and **name** keys identify the symbol itself.
  *
- * NOTE: This class must not use libphutil funtions, including id() and idx().
+ * NOTE: This class must not use libphutil functions, including id() and idx().
  *
  * @task config   Configuring the Query
  * @task load     Loading Symbols
  * @task internal Internals
- *
- * @group library
  */
 final class PhutilSymbolLoader {
 
@@ -275,7 +273,7 @@ final class PhutilSymbolLoader {
    * Execute the query and select matching symbols, but do not load them. This
    * will perform slightly better if you are only interested in the existence
    * of the symbols and don't plan to use them; otherwise, use
-   * ##selectAndLoadSymbols()##.
+   * @{method:selectAndLoadSymbols}.
    *
    * @return dict A dictionary of matching symbols. See top-level class
    *              documentation for details.
@@ -347,7 +345,6 @@ final class PhutilSymbolLoader {
    * @task internal
    */
   private function loadSymbol(array $symbol_spec) {
-
     // Check if we've already loaded the symbol; bail if we have.
     $name = $symbol_spec['name'];
     $is_function = ($symbol_spec['type'] == 'function');
@@ -374,11 +371,11 @@ final class PhutilSymbolLoader {
     $load_failed = null;
     if ($is_function) {
       if (!function_exists($name)) {
-        $load_failed = 'function';
+        $load_failed = pht('function');
       }
     } else {
       if (!class_exists($name, false) && !interface_exists($name, false)) {
-        $load_failed = 'class or interface';
+        $load_failed = pht('class or interface');
       }
     }
 
@@ -387,9 +384,15 @@ final class PhutilSymbolLoader {
       throw new PhutilMissingSymbolException(
         $name,
         $load_failed,
-        "the symbol map for library '{$lib_name}' (at '{$lib_path}') claims ".
-        "this {$load_failed} is defined in '{$where}', but loading that ".
-        "source file did not cause the {$load_failed} to become defined.");
+        pht(
+          "the symbol map for library '%s' (at '%s') claims this %s is ".
+          "defined in '%s', but loading that source file did not cause the ".
+          "%s to become defined.",
+          $lib_name,
+          $lib_path,
+          $load_failed,
+          $where,
+          $load_failed));
     }
   }
 

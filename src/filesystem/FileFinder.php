@@ -14,13 +14,13 @@
  * @task  config    Configuring File Queries
  * @task  exec      Executing the File Query
  * @task  internal  Internal
- * @group filesystem
  */
-final class FileFinder {
+final class FileFinder extends Phobject {
 
   private $root;
   private $exclude = array();
   private $paths = array();
+  private $name = array();
   private $suffix = array();
   private $type;
   private $generateChecksums = false;
@@ -43,6 +43,14 @@ final class FileFinder {
    */
   public function excludePath($path) {
     $this->exclude[] = $path;
+    return $this;
+  }
+
+  /**
+   * @task config
+   */
+  public function withName($name) {
+    $this->name[] = $name;
     return $this;
   }
 
@@ -99,7 +107,13 @@ final class FileFinder {
    * @task internal
    */
   public function validateFile($file) {
-    $matches = (count($this->suffix) == 0);
+    $matches = !count($this->name) && !count($this->suffix);
+    foreach ($this->name as $curr_name) {
+      if (basename($file) === $curr_name) {
+        $matches = true;
+        break;
+      }
+    }
     foreach ($this->suffix as $curr_suffix) {
       if (fnmatch($curr_suffix, $file)) {
         $matches = true;
@@ -173,9 +187,12 @@ final class FileFinder {
 
     if (!is_dir($this->root) || !is_readable($this->root)) {
       throw new Exception(
-        "Invalid FileFinder root directory specified ('{$this->root}'). ".
-        "Root directory must be a directory, be readable, and be specified ".
-        "with an absolute path.");
+        pht(
+          "Invalid %s root directory specified ('%s'). Root directory ".
+          "must be a directory, be readable, and be specified with an ".
+          "absolute path.",
+          __CLASS__,
+          $this->root));
     }
 
     if ($this->forceMode == 'shell') {
@@ -208,8 +225,10 @@ final class FileFinder {
         $args[] = $this->type;
       }
 
-      if ($this->suffix) {
-        $command[] = $this->generateList('name', $this->suffix);
+      if ($this->name || $this->suffix) {
+        $command[] = $this->generateList('name', array_merge(
+          $this->name,
+          $this->suffix));
       }
 
       if ($this->paths) {

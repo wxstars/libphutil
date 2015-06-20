@@ -39,11 +39,11 @@ final class PhutilWordPressFuture extends FutureProxy {
       $params = $this->params;
 
       if (!$this->action) {
-        throw new Exception('You must setRawWordPressQuery()!');
+        throw new Exception(pht('You must %s!', 'setRawWordPressQuery()'));
       }
 
       if (!$this->accessToken) {
-        throw new Exception('You must setAccessToken()!');
+        throw new Exception(pht('You must %s!', 'setAccessToken()'));
       }
 
       $uri = new PhutilURI('https://public-api.wordpress.com/');
@@ -54,7 +54,7 @@ final class PhutilWordPressFuture extends FutureProxy {
       $future->setMethod($this->method);
 
       // NOTE: This is how WordPress.com REST API authenticates
-      $future->addHeader('Authorization', 'Bearer ' . $this->accessToken);
+      $future->addHeader('Authorization', 'Bearer '.$this->accessToken);
 
       $this->future = $future;
     }
@@ -69,10 +69,12 @@ final class PhutilWordPressFuture extends FutureProxy {
       throw $status;
     }
 
-    $data = phutil_json_decode($body);
-    if (empty($data)) {
-      throw new Exception(
-        pht('Expected JSON response from WordPress.com, got: %s', $body));
+    try {
+      $data = phutil_json_decode($body);
+    } catch (PhutilJSONParserException $ex) {
+      throw new PhutilProxyException(
+        pht('Expected JSON response from WordPress.com.'),
+        $ex);
     }
 
     if (idx($data, 'error')) {

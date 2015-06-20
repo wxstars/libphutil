@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @group console
- */
-final class PhutilConsoleFormatter {
+final class PhutilConsoleFormatter extends Phobject {
 
   private static $colorCodes = array(
     'black'   => 0,
@@ -26,7 +23,14 @@ final class PhutilConsoleFormatter {
   public static function getDisableANSI() {
     if (self::$disableANSI === null) {
       $term = phutil_utf8_strtolower(getenv('TERM'));
+      // ansicon enables ANSI support on Windows
+      if (!$term && getenv('ANSICON')) {
+        $term = 'ansi';
+      }
+
       if (phutil_is_windows() && $term !== 'cygwin' && $term !== 'ansi') {
+        self::$disableANSI = true;
+      } else if (!defined('STDOUT')) {
         self::$disableANSI = true;
       } else if (function_exists('posix_isatty') && !posix_isatty(STDOUT)) {
         self::$disableANSI = true;
@@ -65,7 +69,7 @@ final class PhutilConsoleFormatter {
       $format = preg_replace($invert_re,    $invert,    $format);
       $format = preg_replace_callback(
         '@<(fg|bg):('.$colors.')>(.*)</\1>@sU',
-        array('PhutilConsoleFormatter', 'replaceColorCode'),
+        array(__CLASS__, 'replaceColorCode'),
         $format);
     }
 
