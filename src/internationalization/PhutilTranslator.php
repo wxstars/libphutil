@@ -136,13 +136,7 @@ final class PhutilTranslator extends Phobject {
       case 'en_W*':
       case 'en_R*':
       case 'en_A*':
-<<<<<<< HEAD
-<<<<<<< HEAD
       case 'zh_CN':
-=======
->>>>>>> 339837f3c6db741c545cef068ac63c842ce9bc28
-=======
->>>>>>> 339837f3c6db741c545cef068ac63c842ce9bc28
         list($singular, $plural) = $translations;
         if ($variant == 1) {
           return $singular;
