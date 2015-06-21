@@ -30,15 +30,15 @@ final class PhutilUcaiAuthAdapter extends PhutilOAuthAuthAdapter {
   }
 
   public function getAccountURI() {
-    $name = $this->getAccountName();
-    if (strlen($name)) {
-      return 'https://ucai.com/'.$name;
+    $uid = $this->getAccountID();
+    if (strlen($uid)) {
+      return 'http://www.ucai.cn/'.$uid.".html";
     }
     return null;
   }
 
   public function getAccountRealName() {
-    return $this->getOAuthAccountData('name');
+    return $this->getOAuthAccountData('uname');
   }
 
   protected function getAuthenticateBaseURI() {
